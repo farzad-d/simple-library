@@ -17,7 +17,7 @@ addBookToLibrary("aaa", "Jack", 22, true);
 addBookToLibrary("aaa", "Jack", 22, true);
 addBookToLibrary("bbb", "Anna", 32, false);
 addBookToLibrary("zzz", "Emily", 52, false);
-console.log(myLibrary);
+// console.log(myLibrary);
 
 const cards = document.querySelector("#cards");
 
@@ -60,4 +60,20 @@ const closeDialogBtn = document.querySelector("dialog > button");
 addBookBtn.addEventListener("click", () => dialog.showModal());
 closeDialogBtn.addEventListener("click", () => dialog.close());
 
-function addNewBook() {}
+const submitBtn = document.querySelector('[type="submit"]');
+const form = document.querySelector("form");
+
+form.addEventListener("submit", (event) => {
+  event.preventDefault();
+
+  const formData = new FormData(form);
+  const ttl = formData.get("title");
+  const auth = formData.get("author");
+  const pg = formData.get("pages");
+  const stt = formData.get("state");
+
+  addBookToLibrary(ttl, auth, pg, stt);
+  displayLibrary(myLibrary);
+
+  dialog.close();
+});
