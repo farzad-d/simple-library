@@ -1,4 +1,4 @@
-const myLibrary = [];
+let myLibrary = [];
 
 function Book(title, author, pages, readState) {
   this.id = crypto.randomUUID();
@@ -13,15 +13,14 @@ function addBookToLibrary(title, author, pages, readState) {
   myLibrary.push(book);
 }
 
-addBookToLibrary("aaa", "Jack", 22, true);
-addBookToLibrary("aaa", "Jack", 22, true);
-addBookToLibrary("bbb", "Anna", 32, false);
-addBookToLibrary("zzz", "Emily", 52, false);
+addBookToLibrary("Animal Farm", "George Orwell", 110, true);
+addBookToLibrary("Wuthering Heights", "Emily Brontë", 252, true);
+addBookToLibrary("Little Women", "Louisa May Alcott", 282, false);
 // console.log(myLibrary);
 
 const cards = document.querySelector("#cards");
 
-function cardCreator(bookTitle, bookAuthor, bookPages, bookState) {
+function cardCreator(bookTitle, bookAuthor, bookPages, bookState, bookId) {
   const card = document.createElement("section");
   card.classList.add("card");
 
@@ -41,13 +40,25 @@ function cardCreator(bookTitle, bookAuthor, bookPages, bookState) {
   state.textContent = `Read: ${bookState}`;
   card.appendChild(state);
 
+  const delBtn = document.createElement("button");
+  delBtn.textContent = "Del";
+  delBtn.dataset.id = bookId;
+  card.appendChild(delBtn);
+  delBtn.addEventListener("click", (event) => {
+    const bookIdToRemove = event.currentTarget.dataset.id;
+    myLibrary = myLibrary.filter((book) => bookIdToRemove != book.id);
+    displayLibrary(myLibrary);
+  });
+
   cards.appendChild(card);
 }
 
 function displayLibrary(library) {
+  // document.getElementById("cards").innerHTML = "";
+  document.getElementById("cards").replaceChildren();
   for (const book of library) {
     let readUnread = book.readState ? "Read ✅" : "Unread ❌";
-    cardCreator(book.title, book.author, book.pages, readUnread);
+    cardCreator(book.title, book.author, book.pages, readUnread, book.id);
   }
 }
 
@@ -57,7 +68,10 @@ const addBookBtn = document.querySelector("#add-book");
 const dialog = document.querySelector("dialog");
 const closeDialogBtn = document.querySelector("dialog > button");
 
-addBookBtn.addEventListener("click", () => dialog.showModal());
+addBookBtn.addEventListener("click", () => {
+  dialog.showModal();
+  document.querySelector("#title").focus();
+});
 closeDialogBtn.addEventListener("click", () => dialog.close());
 
 const submitBtn = document.querySelector('[type="submit"]');
