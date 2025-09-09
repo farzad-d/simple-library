@@ -8,6 +8,10 @@ function Book(title, author, pages, readState) {
   this.readState = readState;
 }
 
+Book.prototype.changeStt = function () {
+  this.readState = !this.readState;
+};
+
 function addBookToLibrary(title, author, pages, readState) {
   let book = new Book(title, author, pages, readState);
   myLibrary.push(book);
@@ -22,6 +26,7 @@ const cards = document.querySelector("#cards");
 
 function cardCreator(bookTitle, bookAuthor, bookPages, bookState, bookId) {
   const card = document.createElement("section");
+  card.dataset.id = bookId;
   card.classList.add("card");
 
   const title = document.createElement("h3");
@@ -37,16 +42,24 @@ function cardCreator(bookTitle, bookAuthor, bookPages, bookState, bookId) {
   card.appendChild(pages);
 
   const state = document.createElement("p");
-  state.textContent = `Read: ${bookState}`;
+  state.textContent = `Read: ${bookState ? "✅" : "❌"}`;
   card.appendChild(state);
 
   const delBtn = document.createElement("button");
   delBtn.textContent = "Del";
-  delBtn.dataset.id = bookId;
   card.appendChild(delBtn);
-  delBtn.addEventListener("click", (event) => {
-    const bookIdToRemove = event.currentTarget.dataset.id;
-    myLibrary = myLibrary.filter((book) => bookIdToRemove != book.id);
+  delBtn.addEventListener("click", () => {
+    myLibrary = myLibrary.filter((book) => card.dataset.id !== book.id);
+    displayLibrary(myLibrary);
+  });
+
+  const sttBtn = document.createElement("button");
+  sttBtn.textContent = bookState ? "Mark as Unread" : "Mark as Read";
+  card.appendChild(sttBtn);
+  sttBtn.addEventListener("click", () => {
+    myLibrary.find((book) => {
+      if (card.dataset.id === book.id) book.changeStt();
+    });
     displayLibrary(myLibrary);
   });
 
@@ -57,8 +70,7 @@ function displayLibrary(library) {
   // document.getElementById("cards").innerHTML = "";
   document.getElementById("cards").replaceChildren();
   for (const book of library) {
-    let readUnread = book.readState ? "Read ✅" : "Unread ❌";
-    cardCreator(book.title, book.author, book.pages, readUnread, book.id);
+    cardCreator(book.title, book.author, book.pages, book.readState, book.id);
   }
 }
 
@@ -84,10 +96,12 @@ form.addEventListener("submit", (event) => {
   const ttl = formData.get("title");
   const auth = formData.get("author");
   const pg = formData.get("pages");
-  const stt = formData.get("state");
+  const stt = formData.get("state") !== null;
 
   addBookToLibrary(ttl, auth, pg, stt);
   displayLibrary(myLibrary);
 
+  // form.reset();
+  event.currentTarget.reset();
   dialog.close();
 });
