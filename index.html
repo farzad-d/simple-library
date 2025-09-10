@@ -9,14 +9,16 @@
     <script src="index.js" defer></script>
   </head>
   <body>
-    <h1>Book Library</h1>
-    <h2>Manage your knowledge!</h2>
+    <div id="container">
+      <h1>Library</h1>
+      <h2>Manage your knowledge!</h2>
 
-    <button id="add-book">Add Book</button>
-    <div id="cards"></div>
+      <button id="add-book">Add New Book</button>
+      <div id="cards"></div>
+    </div>
 
-    <dialog closedby="any">
-      <button>X</button>
+    <dialog id="add-book-dialog" closedby="any">
+      <button class="close-btn">⨯</button>
       <form method="post" action="#">
         <div>
           <label for="title">Book Title:</label>
@@ -30,10 +32,11 @@
           <label for="pages">Number of Pages:</label>
           <input type="number" name="pages" id="pages" />
         </div>
-        <div>
+        <div class="checkbox-div">
           <label for="state">Have you read the book?</label>
           <input type="checkbox" name="state" id="state" />
         </div>
+
         <button type="submit">Add to Library</button>
       </form>
     </dialog>
