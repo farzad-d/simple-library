@@ -38,7 +38,7 @@ body {
 #add-book {
   margin: 30px;
   width: 150px;
-  height: 30px;
+  height: 32px;
   border: 2px solid black;
   border-radius: 5px;
   font-weight: bold;
@@ -64,6 +64,7 @@ h3 {
   background-color: lightgray;
   padding: 3px;
   width: 120px;
+  height: 30px;
   border-radius: 5px;
 }
 

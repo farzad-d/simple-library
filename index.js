@@ -95,19 +95,36 @@ function displayLibrary(library) {
 
 displayLibrary(myLibrary);
 
-const addBookBtn = document.querySelector("#add-book");
-const dialog = document.querySelector("dialog");
-const closeDialogBtn = document.querySelector(".close-btn");
+const titleInput = document.getElementById("title");
+const authorInput = document.getElementById("author");
+const pagesInput = document.getElementById("pages");
+const inputs = [titleInput, authorInput, pagesInput];
 
-addBookBtn.addEventListener("click", () => {
-  dialog.showModal();
-  document.querySelector("#title").focus();
+const messages = {
+  title: "The title must be filled!",
+  author: "The author name must be filled!",
+  pages: "The pages must be filled!",
+};
+
+inputs.forEach((input) => {
+  input.addEventListener("invalid", () => {
+    if (input.validity.valueMissing) {
+      input.setCustomValidity(messages[input.id]);
+    } else {
+      input.setCustomValidity("");
+    }
+  });
+
+  input.addEventListener("input", () => {
+    input.setCustomValidity("");
+  });
 });
-closeDialogBtn.addEventListener("click", () => dialog.close());
 
+const dialog = document.querySelector("dialog");
 const form = document.querySelector("form");
 form.addEventListener("submit", (event) => {
   event.preventDefault();
+  if (!form.reportValidity()) return;
 
   const formData = new FormData(form);
   const ttl = formData.get("title");
@@ -117,8 +134,11 @@ form.addEventListener("submit", (event) => {
 
   addBookToLibrary(ttl, auth, pg, stt);
   displayLibrary(myLibrary);
-
-  // form.reset();
-  event.currentTarget.reset();
   dialog.close();
 });
+
+const addBookBtn = document.querySelector("#add-book");
+const closeDialogBtn = document.querySelector(".close-btn");
+dialog.addEventListener("close", () => form.reset());
+addBookBtn.addEventListener("click", () => dialog.showModal());
+closeDialogBtn.addEventListener("click", () => dialog.close());
